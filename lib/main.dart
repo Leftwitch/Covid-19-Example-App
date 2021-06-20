@@ -38,13 +38,6 @@ class CovidHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Covid 19 Zahlen',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-      ),
       body: FutureBuilder<List<CovidSummaryEntry>>(
         future: getCovidSummary(),
         builder: (context, snapshot) {
@@ -52,8 +45,27 @@ class CovidHomePage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return ListView(
-            children: snapshot.data!.map(_buildEntry).toList(),
+          return CustomScrollView(
+            slivers: [
+              const SliverAppBar(
+                expandedHeight: 200,
+                pinned: true,
+                floating: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Image(
+                    image: NetworkImage(
+                      'https://www.lsvbw.de/wp-content/uploads/2020/02/2802_Corona.jpg',
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text('Covid 19 Zahlen'),
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                    snapshot.data!.map(_buildEntry).toList()),
+              )
+            ],
           );
         },
       ),
