@@ -10,7 +10,11 @@ Future<List<CovidSummaryEntry>> getCovidSummary() async {
 
   final response = await http.get(url);
 
-  return List<CovidSummaryEntry>.from(json
+  final result = List<CovidSummaryEntry>.from(json
       .decode(response.body)["Countries"]
-      .map((x) => CovidSummaryEntry.fromJson(x)));
+      .map((x) => CovidSummaryEntry.fromJson(x))).toList();
+
+  result.sort((entry1, entry2) => entry1.country.compareTo(entry2.country));
+
+  return result;
 }
